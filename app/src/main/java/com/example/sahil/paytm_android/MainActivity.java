@@ -1,5 +1,6 @@
 package com.example.sahil.paytm_android;
 
+import android.preference.PreferenceManager;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+		ConfirmToServer confirmToServer=new ConfirmToServer(this, new ConfirmToServer.OnRequestFinished() {
+			@Override
+			public void finish() {
+
+			}
+		});
+
+		if(!PreferenceManager.getDefaultSharedPreferences(this).contains("first"))
+			confirmToServer.initialSetUp("9716113010");
+
 
         arr = new ArrayList<>();
         arr.add(new MainModel("family", R.mipmap.ic_launcher));

@@ -5,8 +5,8 @@ android {
     buildToolsVersion "24.0.0"
     defaultConfig {
         applicationId "com.example.sahil.paytm_android"
-        minSdkVersion 15
-        targetSdkVersion 24
+        minSdkVersion 14
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -26,6 +26,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:24.+'
     compile 'com.android.volley:volley:1.0.0'
+    compile "com.google.android.gms:play-services-gcm:9.6.1"
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:design:24.2.1'
 }

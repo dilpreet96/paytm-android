@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">paytm-android</string>
+    <string name="gcm_id">484678200249</string>
 </resources>

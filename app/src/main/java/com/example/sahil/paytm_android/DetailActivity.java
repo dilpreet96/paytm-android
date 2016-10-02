@@ -44,6 +44,8 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+		final ApiRequests apiRequests = new ApiRequests(this);
+
         type = getIntent().getStringExtra("type");
 		Log.d("mytag",type);
 		stringList=new ArrayList<>();
@@ -96,7 +98,9 @@ public class DetailActivity extends AppCompatActivity {
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				createDialog();
+//				createDialog()
+//				apiRequests.checkBalance();
+                apiRequests.sendMoney("200", "8287993513", "9234571331");
 			}
 		});
 

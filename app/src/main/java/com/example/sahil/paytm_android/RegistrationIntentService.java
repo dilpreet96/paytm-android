@@ -3,6 +3,7 @@ package com.example.sahil.paytm_android;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -15,6 +16,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -47,7 +51,8 @@ public class RegistrationIntentService extends IntentService {
 			@Override
 			public void onResponse(String response) {
 				Log.d("mytag",response);
-				PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean("first",true).apply();
+					PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean("first", true).apply();
+
 			}
 		}, new Response.ErrorListener() {
 			@Override

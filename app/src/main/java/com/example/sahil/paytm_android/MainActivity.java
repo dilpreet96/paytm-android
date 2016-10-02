@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
 		ConfirmToServer confirmToServer=new ConfirmToServer(this, new ConfirmToServer.OnRequestFinished() {
 			@Override
 			public void finish() {
@@ -49,17 +50,12 @@ public class MainActivity extends AppCompatActivity {
 		});
 
 		if(!PreferenceManager.getDefaultSharedPreferences(this).contains("first"))
-			confirmToServer.initialSetUp("9711961486");
+			confirmToServer.initialSetUp("9716113010");
 
 
         arr = new ArrayList<>();
         arr.add(new MainModel("family", R.drawable.family));
         arr.add(new MainModel("friends", R.drawable.friends));
-        arr.add(new MainModel("school", R.drawable.family));
-        arr.add(new MainModel("office", R.drawable.friends));
-        arr.add(new MainModel("society", R.drawable.family));
-        arr.add(new MainModel("college", R.drawable.friends));
-
         listView = (ListView)findViewById(R.id.list);
         fab = (FloatingActionButton) findViewById(R.id.fab);
 

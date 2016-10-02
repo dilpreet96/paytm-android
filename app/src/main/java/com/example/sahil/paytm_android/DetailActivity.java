@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -47,6 +48,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 		listView=(GridView)findViewById(R.id.detail_list);
+
         type = getIntent().getStringExtra("type");
 		Log.d("mytag",type);
 		stringList=new ArrayList<>();
@@ -104,6 +106,15 @@ public class DetailActivity extends AppCompatActivity {
 			}
 		});
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String phone = stringList.get(position);
+
+                ApiRequests apiRequests = new ApiRequests(DetailActivity.this);
+                apiRequests.sendMoney(apiRequests.mobile, phone, "200");
+            }
+        });
 
 	}
 

@@ -12,7 +12,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -39,16 +41,17 @@ public class DetailActivity extends AppCompatActivity {
 	private List<String> stringList;
 	private DetailAdapter adapter;
 	FloatingActionButton fab;
+	GridView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
+		listView=(GridView)findViewById(R.id.detail_list);
         type = getIntent().getStringExtra("type");
 		Log.d("mytag",type);
 		stringList=new ArrayList<>();
 		adapter=new DetailAdapter(this,stringList);
-
+		listView.setAdapter(adapter);
         final StringRequest request;
 
 
@@ -62,6 +65,7 @@ public class DetailActivity extends AppCompatActivity {
 								for(int i=0;i<jsonArray.length();i++){
 									object=jsonArray.getJSONObject(i);
 									stringList.add(object.getString("phone"));
+									Log.d("mytag",object.getString("phone"));
 
 								}
 
@@ -121,7 +125,7 @@ public class DetailActivity extends AppCompatActivity {
 
 
 	private void sendINvite(final String receiverNumber){
-		StringRequest request=new StringRequest(Request.Method.POST, "http://b8cf2da7.ngrok.io/api/invite/", new Response.Listener<String>() {
+		StringRequest request=new StringRequest(Request.Method.POST, "http://paytm-hack.herokuapp.com/api/api/invite/", new Response.Listener<String>() {
 			@Override
 			public void onResponse(String response) {
 
@@ -140,6 +144,7 @@ public class DetailActivity extends AppCompatActivity {
 				map.put("group",type);
 				map.put("receiver_phone",receiverNumber);
 				return map;
+
 			}
 		};
 		RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());

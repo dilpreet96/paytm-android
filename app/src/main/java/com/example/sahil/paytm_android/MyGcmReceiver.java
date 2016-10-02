@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.android.gms.gcm.GcmReceiver;
 
@@ -25,12 +26,13 @@ public class MyGcmReceiver extends GcmReceiver {
 		super.onReceive(context, intent);
 		ctx=context;
 		msg=intent.getExtras().getString("msg");
-		if(intent.getExtras().getInt("invite")==1) {
+		if(intent.getExtras().containsKey("sender")) {
 			table = intent.getExtras().getString("table");
 			sender=intent.getExtras().getString("sender");
 			sendInviteNotification(msg,table,sender);
 		}
 
+		Log.d("mytag",msg);
 
 	}
 	private void sendInviteNotification(String msg,String table,String sender) {

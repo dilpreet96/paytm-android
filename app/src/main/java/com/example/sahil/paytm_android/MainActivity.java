@@ -1,8 +1,11 @@
 package com.example.sahil.paytm_android;
 
-import android.content.Intent;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.preference.PreferenceManager;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,11 +14,20 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.paytm.merchant.CheckSumServiceHelper;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.TreeMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,14 +35,11 @@ public class MainActivity extends AppCompatActivity {
     MainBaseAdapter adapter;
     ArrayList<MainModel> arr;
     FloatingActionButton fab;
-    String checkSum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        getSupportActionBar().setTitle("Paytm");
 
 		ConfirmToServer confirmToServer=new ConfirmToServer(this, new ConfirmToServer.OnRequestFinished() {
 			@Override
@@ -42,25 +51,6 @@ public class MainActivity extends AppCompatActivity {
 		if(!PreferenceManager.getDefaultSharedPreferences(this).contains("first"))
 			confirmToServer.initialSetUp("9711961486");
 
-
-//        CheckSumServiceHelper checkSumServiceHelper = CheckSumServiceHelper.getCheckSumServiceHelper();
-//        TreeMap<String, String> parameters = new TreeMap<String, String>();
-//        String merchantKey = "kbzk1DSbJiV_O3p5";
-//        parameters.put("MID", "WorldP64425807474247"); // Merchant ID (MID) provided by Paytm
-//        parameters.put("ORDER_ID", "abcd"); // Merchant’s order id
-//        parameters.put("CUST_ID", "defg"); // Customer ID registered with merchant
-//        parameters.put("TXN_AMOUNT", "10");
-//        parameters.put("CHANNEL_ID", "WEB");
-//        parameters.put("INDUSTRY_TYPE_ID", "Retail"); //Provided by Paytm
-//        parameters.put("WEBSITE", "worldpressplgOAuth"); //Provided by Paytm
-//
-//        try {
-//            checkSum = checkSumServiceHelper.genrateCheckSum(merchantKey, parameters);
-//            Log.e("test", checkSum);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            Log.e("test", "problem with checksum");
-//        }
 
         arr = new ArrayList<>();
         arr.add(new MainModel("family", R.drawable.family));
@@ -79,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "" + checkSum, Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -87,16 +77,79 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle bundle = new Bundle();
-                if(position == 0) {
-                    bundle.putString("type", "Family");
-                } else if (position == 1) {
-                    bundle.putString("type", "Friend");
-                }
-                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                intent.putExtra("bundle", bundle);
-                startActivity(intent);
+
+				Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+
+				if(position == 0) {
+					intent.putExtra("type", "Family");
+				} else if (position == 1) {
+					intent.putExtra("type", "Friend");
+				}
+				startActivity(intent);
             }
         });
-    }
+		try {
+			checkWhetherInvite();
+		}catch (NullPointerException e){
+
+		}
+	}
+
+	private void checkWhetherInvite() throws NullPointerException{
+
+		if(getIntent().getExtras().containsKey("table")){
+
+			AlertDialog.Builder alertDialog=new AlertDialog.Builder(MainActivity.this);
+			alertDialog.setMessage("Do you want to accept the invite by "+getIntent().getExtras().getString("sender"));
+			alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+					confirmInvite(getIntent().getExtras().getString("sender"),getIntent().getExtras().getString("table"));
+				}
+			});
+			alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialogInterface, int i) {
+
+				}
+			});
+			alertDialog.show();
+		}
+	}
+
+	private void confirmInvite(String sender,final String table){
+		StringRequest request=new StringRequest(Request.Method.POST, "https://paytm-hack.herokuapp.com/api/confirm/", new Response.Listener<String>() {
+			@Override
+			public void onResponse(String response) {
+				try{
+
+					JSONObject object=new JSONObject(response);
+					PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()
+							.putString("id",object.getString("id")).apply();
+
+					startService(new Intent(getApplicationContext(),RegistrationIntentService.class));
+
+				}catch (JSONException e){
+					Log.d("mytag","JSON "+e.toString());
+				}
+
+
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.d("mytag","confirm "+error.toString());
+			}
+		}){
+			@Override
+			protected Map<String, String> getParams() throws AuthFailureError {
+				Map<String,String> map=new HashMap<>();
+				map.put("uid", PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("id",null));
+				map.put("group",table);
+				return map;
+			}
+		};
+		RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+		requestQueue.add(request);
+	}
 }

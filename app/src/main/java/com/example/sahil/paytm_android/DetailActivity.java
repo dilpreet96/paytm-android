@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -29,7 +30,7 @@ public class DetailActivity extends AppCompatActivity {
         StringRequest request;
 
         if(type.compareToIgnoreCase("Family") == 0) {
-            request = new StringRequest(url,
+            request = new StringRequest(Request.Method.POST, url,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {

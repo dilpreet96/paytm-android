@@ -11,7 +11,10 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:id="@+id/list"
-       android:minHeight="300dp"/>
+       android:minHeight="300dp"
+       android:padding="10dp"
+       android:divider="@android:color/transparent"
+       android:dividerHeight="10.0sp"/>
 
     <android.support.design.widget.FloatingActionButton
         android:src="@drawable/plus"

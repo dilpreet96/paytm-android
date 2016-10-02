@@ -40,13 +40,12 @@ public class DetailAdapter extends BaseAdapter{
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		convertView = inflater.inflate(R.layout.single_list_item, parent, false);
+		inflater=LayoutInflater.from(context);
+		convertView = inflater.inflate(R.layout.single_grid_item, parent, false);
 
 		TextView textView = (TextView) convertView.findViewById(R.id.text);
-		ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
 
 		textView.setText(stringList.get(position));
-		imageView.setVisibility(View.GONE);
 		return convertView;
 	}
 }

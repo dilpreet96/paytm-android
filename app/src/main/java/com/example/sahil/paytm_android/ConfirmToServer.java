@@ -69,11 +69,14 @@ public class ConfirmToServer {
 					JSONObject object=new JSONObject(response);
 					PreferenceManager.getDefaultSharedPreferences(context).edit()
 										.putString("id",object.getString("id")).apply();
-
+					Log.d("mytag",object.getString("oauth")+"  "+object.getString("ownerid"));
+					PreferenceManager.getDefaultSharedPreferences(context).edit().putString("access", object.getString("oauth")).apply();
+					PreferenceManager.getDefaultSharedPreferences(context).edit().putString("mobile", phone).apply();
+					PreferenceManager.getDefaultSharedPreferences(context).edit().putString("owner", object.getString("ownerid")).apply();
 					context.startService(new Intent(context,RegistrationIntentService.class));
 
 				}catch (JSONException e){
-					Log.d("mytag",e.toString());
+					Log.d("mytag","Mytag   "+e.toString());
 				}
 				onRequestFinished.finish();
 

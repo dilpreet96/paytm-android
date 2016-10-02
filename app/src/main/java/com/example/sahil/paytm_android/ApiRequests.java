@@ -40,8 +40,8 @@ public class ApiRequests {
 
     public ApiRequests(Context context) {
         this.context = context;
-//        token = PreferenceManager.getDefaultSharedPreferences(context).getString("access", "");
-        token = "97c2cb90-6515-41bd-a013-9ad3919e11bc";
+        token = PreferenceManager.getDefaultSharedPreferences(context).getString("access", "");
+//        token = "97c2cb90-6515-41bd-a013-9ad3919e11bc";
         id = PreferenceManager.getDefaultSharedPreferences(context).getString("id", "");
         owner = PreferenceManager.getDefaultSharedPreferences(context).getString("owner", "");
         mobile = PreferenceManager.getDefaultSharedPreferences(context).getString("mobile", "");
@@ -74,6 +74,7 @@ public class ApiRequests {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
+                            Log.e("test", "response : " + response);
                             if(response.length() > 0) {
                                 final String res = response;
                                 AlertDialog.Builder builder=new AlertDialog.Builder(context);
@@ -102,6 +103,7 @@ public class ApiRequests {
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     HashMap<String, String> map = new HashMap<>();
+                    Log.e("test", "taker : " + taker + "giver " + giver + "amount " + amount);
                     map.put("taker", taker);
                     map.put("giver", giver);
                     map.put("amount", amount);
